@@ -1,0 +1,152 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickEats - Food Delivery</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>QuickEats</h1>
+    <nav>
+  <a href="index.html" class="active">Home</a>
+  <a href="cart.html">Cart <span id="cart-count">0</span></a>
+  <span id="user-section"></span>
+</nav>
+  </header>
+
+  <section class="filter">
+    <label for="category">Filter by Category:</label>
+    <select id="category" onchange="filterMenu()">
+      <option value="all">All</option>
+      <option value="north">North Indian</option>
+      <option value="south">South Indian</option>
+      <option value="chinese">Chinese</option>
+      <option value="italian">Italian</option>
+    </select>
+    <label for="veg-toggle">Veg Only</label>
+    <input type="checkbox" id="veg-toggle" onchange="filterMenu()">
+  </section>
+
+  <section class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search for dishes..." oninput="filterMenu()">
+  </section>
+
+  <section class="menu-items"></section>
+
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - QuickEats</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>QuickEats</h1>
+    <a href="index.html">← Back to Home</a>
+  </header>
+
+  <section class="form-container">
+    <h2>Login</h2>
+    <form onsubmit="login(event)">
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+  </section>
+
+  <script src="auth.js"></script>
+  <!-- Google Maps Script -->
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap">
+</script>
+
+  
+</body>
+</html>
+
+<!-- signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - QuickEats</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>QuickEats</h1>
+    <a href="index.html">← Back to Home</a>
+    <section id="location-status" style="text-align:center; padding:1rem; font-weight:bold;"></section>
+
+  </header>
+
+  <section class="form-container">
+    <h2>Sign Up</h2>
+    <form onsubmit="signup(event)">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Create Account</button>
+    </form>
+    <p>Already have an account? <a href="login.html">Login here</a></p>
+  </section>
+
+  <script src="auth.js"></script>
+</body>
+</html>
+
+<!-- cart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart - QuickEats</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>QuickEats - Your Cart</h1>
+    <a href="index.html">← Back to Menu</a>
+  </header>
+
+  <section class="cart-items" id="cart-items"></section>
+
+  <section class="checkout">
+    <h3>Total: ₹<span id="total-price">0</span></h3>
+    <button onclick="checkout()">Proceed to Pay</button>
+  </section>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="cart.js"></script>
+  <script type="module" src="firebase.js"></script>
+<script type="module" src="auth.js"></script>
+<a href="login.html">Login</a>
+<script type="module">
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (!user) {
+    window.location.href = "login.html";
+  }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    

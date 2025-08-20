@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Cart - QuickEats</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>QuickEats - Your Cart</h1>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="cart.html" class="nav-link active">Cart <span id="cart-count">0</span></a>
+    <span id="user-section"></span>
+  </nav>
+
+  <!-- Cart Items -->
+  <section class="cart-items" id="cart-items"></section>
+
+  <!-- Checkout Section -->
+  <section class="checkout">
+    <h3>Total: ₹<span id="total-price">0</span></h3>
+    <button onclick="checkout()">Proceed to Pay</button>
+    <button onclick="clearCart()" class="clear-cart">Clear Cart</button>
+  </section>
+
+  <!-- Map Preview Section -->
+  <section style="padding: 1rem;">
+    <h3>📍 Your Location (Map Preview)</h3>
+    <div id="map" style="height: 300px; width: 100%; border-radius: 10px; margin-top: 1rem;"></div>
+  </section>
+
+  <!-- Razorpay SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <!-- Firebase/Auth/Script -->
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+  <script src="cart.js"></script>
+
+  <!-- Google Maps SDK -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8FO6fWpZu6E0__NVZNTUm4O0961AywQo&callback=initMap">
+  </script>
+
+  <!-- Location & Map Init -->
+  <script>
+    function initMap() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+              center: userLocation,
+              zoom: 15
+            });
+
+            new google.maps.Marker({
+              position: userLocation,
+              map: map,
+              title: "You are here"
+            });
+          },
+          () => {
+            alert("❌ Unable to access location. Please allow location permission.");
+          }
+        );
+      } else {
+        alert("❌ Geolocation not supported by this browser.");
+      }
+    }
+
+    // Highlight active nav link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if (window.location.href.includes(link.getAttribute('href'))) {
+        link.classList.add('active');
+      }
+    });
+    
+  </script>
+  <script src="location.js"></script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8FO6fWpZu6E0__NVZNTUm4O0961AywQo&callback=locateUser">
+</script>
+
+
+</body>
+</html>
