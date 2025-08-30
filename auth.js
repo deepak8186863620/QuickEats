@@ -1,58 +1,62 @@
 // auth.js
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
+// Signup (local for now – since Swecha API has no signup endpoint)
+function signup(e) {
+  e.preventDefault();
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB8FO6fWpZu6E0__NVZNTUm4O0961AywQo",
-  authDomain: "quickeats-94d5c.firebaseapp.com",
-  projectId: "quickeats-94d5c",
-  storageBucket: "quickeats-94d5c.appspot.com",
-  messagingSenderId: "257766349595",
-  appId: "1:257766349595:web:2522f028c9ccd641b591be",
-  measurementId: "G-Y401X76X1J"
-};
+  const user = { name, email, password };
+  localStorage.setItem("user", JSON.stringify(user));
 
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-
-const signupForm = document.getElementById("signup-form");
-if (signupForm) {
-  signupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("signupEmail").value;
-    const password = document.getElementById("signupPassword").value;
-
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        alert("✅ Account created! Redirecting to login...");
-        window.location.href = "login.html";
-      })
-      .catch((error) => {
-        alert("❌ " + error.message);
-      });
-  });
+  alert("✅ Account created! Please login.");
+  window.location.href = "login.html";
 }
 
-// 🔐 LOGIN
-const loginForm = document.getElementById("login-form");
-if (loginForm) {
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
+// Login using Swecha API
+async function login(e) {
+  e.preventDefault();
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        localStorage.setItem("loggedInUser", JSON.stringify(user));
-        alert("✅ Login successful!");
-        window.location.href = "index.html";
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  try {
+    const response = await fetch("https://dev.api.corpus.swecha.org/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: email,   // Swecha API expects username
+        password: password
       })
-      .catch((error) => {
-        alert("❌ " + error.message);
-      });
-  });
+    });
+
+    const data = await response.json();
+    console.log("Login Response:", data);
+
+    if (response.ok && data.access_token) {
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("loggedInUser", JSON.stringify({ email }));
+
+      alert("✅ Login successful!");
+      window.location.href = "index.html";
+    } else {
+      alert("❌ Login failed: " + (data.detail || "Invalid credentials"));
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("⚠️ Something went wrong. Please try again.");
+  }
+}
+
+// Logout
+function logout() {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "login.html";
+}
+
+// Check if user is logged in
+function getLoggedInUser() {
+  return JSON.parse(localStorage.getItem("loggedInUser"));
 }

@@ -2,26 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign Up - QuickEats</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>QuickEats</h1>
-    <a href="index.html">← Back to Home</a>
-  </header>
-
-  <section class="form-container">
+  <div class="form-container">
     <h2>Sign Up</h2>
-    <form id="signup-form">
-      <input type="email" id="signupEmail" placeholder="Email" required />
-      <input type="password" id="signupPassword" placeholder="Password" required />
-      <button type="submit">Create Account</button>
+    <form id="signupForm">
+      <input type="text" id="fullname" placeholder="Full Name" required />
+
+      <input type="email" id="email" placeholder="Email Address" required />
+
+      <input type="tel" id="phone" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required />
+
+      <select id="gender" required>
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <input type="date" id="dob" placeholder="Date of Birth" required />
+
+      <input type="text" id="city" placeholder="City" required />
+
+      <input type="password" id="password" placeholder="Create Password" required />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+
+      <button type="submit">Sign Up</button>
     </form>
     <p>Already have an account? <a href="login.html">Login here</a></p>
-  </section>
+  </div>
 
-  <script type="module" src="auth.js"></script>
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const fullname = document.getElementById("fullname").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const gender = document.getElementById("gender").value;
+      const dob = document.getElementById("dob").value;
+      const city = document.getElementById("city").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      // Phone number validation
+      if (!/^\d{10}$/.test(phone)) {
+        alert("❌ Phone number must be exactly 10 digits!");
+        return;
+      }
+
+      // Password match validation
+      if (password !== confirmPassword) {
+        alert("❌ Passwords do not match!");
+        return;
+      }
+
+      // Store data in sessionStorage to pass to OTP page
+      const signupData = { fullname, email, phone, gender, dob, city, password };
+      sessionStorage.setItem("signupData", JSON.stringify(signupData));
+
+      // Redirect to OTP verification page
+      window.location.href = "otp.html";
+    });
+  </script>
 </body>
 </html>
